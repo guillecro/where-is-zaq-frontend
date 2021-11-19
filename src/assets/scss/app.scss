@@ -1,0 +1,20 @@
+// Import Bulma and Buefy styles
+@import url('https://fonts.googleapis.com/css2?family=Beth+Ellen&family=Special+Elite&display=swap');
+@import "~bulma/sass/utilities/_all";
+
+@import "variables";
+
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+
+html{
+  background-color: $background;
+}
+
+.has-text-shadow{
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.65);
+}
+
+.text-secondary{
+  font-family: 'Beth Ellen', $family-sans-serif !important;
+}

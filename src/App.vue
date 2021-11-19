@@ -1,28 +1,109 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="hero is-fullheight is-black" style="position:relative;">
+    <TheResponse v-if="showResponse" :response="response" :zaq="isZaq"/>
+      <div class="hero-body">
+        <div class="container">
+          <img id="the-ouija" v-if="play" src="/ouija-board.png" width="600" class="image mx-auto mb-6" alt="">
+          <WhoPlaying v-if="askPlayer" @setName="setName"/>
+          <Ouija ref="ouija" @timeout="showTimeout" :player="player" v-if="play"/>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import WhoPlaying from './components/WhoPlaying.vue'
+import Ouija from './components/Ouija.vue'
+import TheResponse from './components/TheResponse.vue'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      player: null,
+      askPlayer: true,
+      play: false,
+      showResponse: false,
+      response: null,
+      isZaq: false,
+      audio: null,
+    }
+  },
   components: {
-    HelloWorld
+    WhoPlaying,
+    Ouija,
+    TheResponse
+  },
+  sockets: {
+    connect: function(){
+      console.log('🧦 [APP] [SOCKET] Socket is connected 🔌✅')
+    },
+    disconnect: function(){
+      console.log('🧦 [CHAT] [SOCKET] socket disconnected 🔌❌')
+    },
+    recieveMessage: function(message){
+      console.log('🧦 [CHAT] [SOCKET] recieveMessage', message)
+      this.$refs.ouija.stopTimeout()
+      this.response = message
+      this.showResponse = true
+      this.isZaq = true
+      let responseAudio = new Audio('/response.mp3')
+      responseAudio.volume = 0.25
+      responseAudio.play()
+      setTimeout( () => {
+        this.response = null
+        this.showResponse = false
+        this.isZaq = false
+      }, 15000)
+    }
+  },
+  methods: {
+    setName: function(name){
+      this.player = name
+      this.askPlayer = false
+      this.play = true
+      this.audio = new Audio('/ambience.mp3')
+      this.audio.volume = 0.7
+      this.audio.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+      }, false);
+      this.audio.play()
+    },
+    showTimeout: function(){
+      this.response = 'There was only silence...'
+      this.showResponse = true
+        this.isZaq = false
+      setTimeout( () => {
+        this.response = null
+        this.showResponse = false
+        this.isZaq = false
+      }, 5000)
+    }
   }
 }
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import "@/assets/scss/app.scss";
+  /* Copy this @keyframes block to your CSS*/
+  @keyframes ouijaKeys {
+      0.0%{
+          transform: translate(0px, 0px) rotate(1deg);
+      }
+      30%{
+          transform: translate(0px, -8px) rotate(2deg);
+      }
+      100%{
+          transform: translate(0px, 0px) rotate(1deg);
+      }
+  }
+
+/* Add the animation: property to whichever element you want to animate */
+#the-ouija{
+    animation: ouijaKeys 10s ease-in-out 0s infinite normal none;
+} 
+
 </style>
