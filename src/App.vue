@@ -51,7 +51,7 @@ export default {
       console.log('🧦 [CHAT] [SOCKET] socket disconnected 🔌❌')
     },
     recieveMessage: function(message){
-      console.log('🧦 [CHAT] [SOCKET] recieveMessage', message)
+      console.log('🧦 [CHAT] [SOCKET] receiveMessage', message)
       this.$refs.ouija.stopTimeout()
       this.response = message
       this.showResponse = true
@@ -75,7 +75,7 @@ export default {
       }, 15000)
     },
     recieveSticker: function(message){
-      console.log('🧦 [CHAT] [SOCKET] recieveSticker', message)
+      console.log('🧦 [CHAT] [SOCKET] receiveSticker', message)
       this.$refs.ouija.stopTimeout()
       this.response = message
       this.showResponse = true
@@ -88,7 +88,7 @@ export default {
       let date = new Date()
       let time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
       // Add the message to the log
-      this.log.push(`${time} - I recieved a sticker... what does it mean?`)
+      this.log.push(`${time} - I received a sticker... what does it mean?`)
       setTimeout( () => {
         this.response = null
         this.showResponse = false
@@ -98,7 +98,7 @@ export default {
       }, 15000)
     },
     recieveImage: function(message){
-      console.log('🧦 [CHAT] [SOCKET] recieveImage', message)
+      console.log('🧦 [CHAT] [SOCKET] receiveImage', message)
       this.$refs.ouija.stopTimeout()
       this.response = message
       this.showResponse = true
@@ -111,7 +111,7 @@ export default {
       let date = new Date()
       let time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
       // Add the message to the log
-      this.log.push(`${time} - I recieved a picture... Is it a clue?`)
+      this.log.push(`${time} - I received a picture... Is it a clue?`)
       this.inventory.push(message)
       setTimeout( () => {
         this.response = null

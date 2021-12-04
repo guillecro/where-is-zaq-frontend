@@ -17,7 +17,7 @@ const socketParams = {
   // autoConnect: false
 }
 
-const socket = io('http://localhost:3000', socketParams);
+const socket = io(process.env.VUE_APP_API_URL, socketParams);
 // const socket = io('https://192.168.0.215:13230/', socketParams);
 Vue.use(VueSocketIOExt, socket);
 

@@ -1,6 +1,6 @@
 // Set your colors
 $primary: #8c67ef;
-$background: #15202b;
+$background: $black;
 $background-light: findLightColor($background);
 $background-dark: findDarkColor($background);
 $background-invert: findColorInvert($background);
