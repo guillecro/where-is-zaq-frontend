@@ -1,7 +1,7 @@
 <template>
     <div>
       <input type="text" v-if="!waiting" v-model="message" maxlength="240" class="chat-input input is-large has-background-black has-text-white has-text-centered" placeholder="Talk..." @keyup.enter="sendMessage">
-      <input type="text" v-else-if="waiting && !replied" maxlength="240" class="chat-input input is-large has-background-black has-text-white has-text-centered" placeholder="Wait 2 minutes for a response..." readonly disabled>
+      <input type="text" v-else-if="waiting && !replied" maxlength="240" class="chat-input input is-large has-background-black has-text-white has-text-centered" :placeholder="`Wait ${waitingSeconds} seconds for a response...`" readonly disabled>
       <input type="text" v-else-if="replied" maxlength="240" class="chat-input input is-large has-background-black has-text-white has-text-centered" placeholder="The air feels heavy..." readonly disabled>
     </div>
 </template>
@@ -14,12 +14,15 @@ export default {
       message: null,
       waiting: false,
       replied: false,
-      timeoutId: null
+      timeoutId: null,
+      waitingSeconds: 0,
+      waitingSecondsIntervalId: 0,
     }
   },
   methods: {
     stopTimeout: function(){
       clearTimeout(this.timeoutId)
+      clearInterval(this.waitingSecondsIntervalId)
       this.replied = true
       setTimeout(() => {
         this.waiting = false
@@ -39,15 +42,22 @@ export default {
       })
       this.message = null
       this.waiting = true
+      this.waitingSeconds = 120
       this.timeoutId = setTimeout( () => {
-          this.$emit('timeout')
+        this.$emit('timeout')
         setTimeout( () => {
           this.waiting = false
-          }, 5000)
-        }, 120000)
-      }
+        }, 5000)
+      }, 120000)
+      this.waitingSecondsIntervalId = setInterval( () => {
+        this.waitingSeconds--
+        if(this.waitingSeconds <= 0){
+          clearInterval(this.waitingSecondsIntervalId)
+        }
+      }, 1000)
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
